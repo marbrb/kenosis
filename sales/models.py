@@ -109,6 +109,7 @@ class Register(models.Model):
     client = models.ForeignKey(
         'Client',
         verbose_name='cliente',
+        null=True,
     )
 
     description = models.CharField(
