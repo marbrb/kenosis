@@ -1,0 +1,7 @@
+ENTRANCE_TYPE = 10
+EXPENSE_TYPE = 20
+
+REGISTER_TYPE_CHOICES = (
+    (ENTRANCE_TYPE, 'ingreso'),
+    (EXPENSE_TYPE, 'gasto'),
+)
