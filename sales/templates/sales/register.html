@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Ingresar registro</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-	<link rel="stylesheet" type="text/css" href="css/icons.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Ingresar registro</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/icons.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 </head>
 <body>
 
-	<!-- Content -->
-	<div class="container">
-		<h1>Ingresar Venta</h1>
-		<form>
-			<h3>Producto</h3>
-			<div class="form-group">
-    			
-    			<label for="product-bar-code">Código: </label>
-    			<input type="text" class="form-control" id="bar_code"  placeholder="Código del producto" autofocus>
+    <!-- Content -->
+    <div class="container">
+        <h1>Ingresar Venta</h1>
+        <form>
+            <h3>Producto</h3>
+            <div class="form-group">
 
-    			<label for="product-name">Nombre: </label>
-    			<input type="text" class="form-control" id="name"  readonly>
+                <label for="product-bar-code">Código: </label>
+                <input type="text" class="form-control" id="bar_code"  placeholder="Código del producto" autofocus>
 
-    			<div class="row">
-    				<div class="col">
-		    			<label for="product-price">Precio: </label>
-		    			<div class="input-group">
-  							<span class="input-group-addon">$</span>
-							<input type="text" id="price" class="form-control input-right" aria-label="Precio" placeholder="0" readonly="">
-  							<span class="input-group-addon">.00</span>
-						</div>
- 				   	</div>
-			    	<div class="col">
-		    			<label for="product-amount">Cantidad: </label>
-						<div class="input-group">
-			    			<button type="button" id="add_product" class="btn btn-danger">
-			    				<span class="icon-minus"></span>
-			    			</button>		    				
-			    			<input type="text" class="form-control input-right" id="amount" placeholder="0" readonly>
-			    			<button type="button" id="remove_product" class="btn btn-success">
-			    				<span class="icon-plus"></span>
-			    			</button>
-						</div>
-    				</div>
-  				</div>
+                <label for="product-name">Nombre: </label>
+                <input type="text" class="form-control" id="name"  readonly>
 
-			</div>
-			<div class="form-group">
-    			<label for="bar-code">Descripción: </label>
-    			<input type="text" class="form-control" id="descripcion"  placeholder="Descripción">
-			</div>
+                <div class="row">
+                    <div class="col">
+                        <label for="product-price">Precio: </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" id="price" class="form-control input-right" aria-label="Precio" placeholder="0" readonly="">
+                            <span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="product-amount">Cantidad: </label>
+                        <div class="input-group">
+                            <button type="button" id="add_product" class="btn btn-danger">
+                                <span class="icon-minus"></span>
+                            </button>		    				
+                            <input type="text" class="form-control input-right" id="amount" placeholder="0" readonly>
+                            <button type="button" id="remove_product" class="btn btn-success">
+                                <span class="icon-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-			<button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+            <div class="form-group">
+                <label for="bar-code">Descripción: </label>
+                <input type="text" class="form-control" id="descripcion"  placeholder="Descripción">
+            </div>
 
-		</form>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+
+        </form>
 		
-	</div>
+    </div>
 
-	<!-- Dependencies -->
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <!-- Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </body>
 </html>
