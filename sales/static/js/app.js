@@ -17,6 +17,17 @@ $(document).ready(function() {
 		$amount_field.val(value < 0 ? 0 : value)
 
 	})
+
+	$('#get_product').on('submit', function(e) {
+		console.log('buenala')
+		e.preventDefault()
+	})
+
+	$('#register').on('submit', function(e) {
+		console.log('ja')
+		e.preventDefault()
+	}) 
+
 })
 
 function to_int($element) {
