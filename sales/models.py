@@ -133,6 +133,16 @@ class Register(models.Model):
         verbose_name='servicio',
     )
 
+    is_pay_with_card = models.BooleanField(
+        default=False,
+        verbose_name='Fue pago con tarjeta de credito'
+    )
+
+    product_name = models.CharField(
+        max_length=255,
+        verbose_name='nombre del producto'
+    )
+
     @property
     def is_entrance(self):
         return self.register_type == ENTRANCE_TYPE
