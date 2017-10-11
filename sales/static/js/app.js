@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
 	var $amount_field = $('#amount');
+	console.log($('#remove_product'))
 
 	$('#add_product').on('click', function() {
 
@@ -12,7 +13,7 @@ $(document).ready(function() {
 	})
 
 	$('#remove_product').on('click', function() {
-		
+		console.log('guasap')
 		var value = to_int($amount_field) - 1
 		$amount_field.val(value < 0 ? 0 : value)
 
