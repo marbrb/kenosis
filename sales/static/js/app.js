@@ -100,6 +100,7 @@ function to_int($element) {
 function saleProduct(elements, buttons) {
     elements['price'].attr('readonly', true)
     elements['name'].attr('readonly', true)
+    elements['name'].attr('placeholder', 'Nombre del producto')
     elements['bar_code'].attr('disabled', false)
     buttons['search_product'].attr('disabled', false)
 }
@@ -107,6 +108,7 @@ function saleProduct(elements, buttons) {
 function saleService(elements, buttons) {
     elements['price'].attr('readonly', false)
     elements['name'].attr('readonly', false)
+    elements['name'].attr('placeholder', 'Nombre del servicio')
     elements['bar_code'].attr('disabled', true)
     buttons['search_product'].attr('disabled', true)
 }
