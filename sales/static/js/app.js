@@ -26,6 +26,7 @@ $(document).ready(function() {
     }
 
     initialize(elements)
+    elements['tipo_ingreso'].val('Producto')
 
     elements['tipo_ingreso'].change(function() {
         $tipo = elements['tipo_ingreso']
@@ -34,16 +35,18 @@ $(document).ready(function() {
             saleProduct(elements, buttons)
 
         else
-        saleService(elements, buttons)
+            saleService(elements, buttons)
 
+        initialize(elements)
     })
 
     buttons['add_product'].on('click', function() {
 
-        var value = to_int(elements['amount'])
-        elements['amount'].val(value + 1)
+        var maximum_value = to_int(elements['amount_holder'])
 
-        //TODO: No exceder la cantidad máxima de producto
+        var value = to_int(elements['amount']) + 1
+        value = (value > maximum_value) ? maximum_value : value
+        elements['amount'].val(value)
 
     })
 
@@ -55,13 +58,28 @@ $(document).ready(function() {
     })
 
     forms['get_product'].on('submit', function(e) {
-        console.log('Sending product...')
-        $.get('http://59dede2bb11b290012f17b52.mockapi.io/kenosis/product', 
-            function(data) {
-                $('#price').val(data[0].price)
-                $('#name').val(data[0].name)
-            }
-        )
+        var codigo = $.trim(elements['bar_code'].val())
+        
+        if(codigo) {
+
+            $.get('/producto/', {code: codigo}, function(data) {
+
+                if(!data.ok){
+                    alert(data.msg)
+                    elements['bar_code'].val('')
+                    elements['bar_code'].focus()
+
+                } else {
+
+                    elements['name'].val(data.name)
+                    elements['price'].val(data.price)
+                    elements['amount_holder'].val(data.amount)
+
+                }
+
+            })
+        }
+
         e.preventDefault()
     })
 
@@ -101,7 +119,6 @@ function initialize(elements) {
     elements['bar_code'].val('')
     elements['comission'].val('')
     elements['descripcion'].val('')
-    elements['tipo_ingreso'].val('Producto')
     elements['amount_holder'].val('')
     elements['cedula_cliente'].val('')
     elements['cedula_vendedor'].val('')
