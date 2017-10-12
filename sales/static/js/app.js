@@ -84,7 +84,64 @@ $(document).ready(function() {
     })
 
     forms['register'].on('submit', function(e) {
-        console.log('ja')
+
+        var name            =   trimText(elements['name']),
+            price           =   to_int(elements['price']),
+            amount          =   to_int(elements['amount']),
+            is_card         =   elements['pay_with_card'].prop('checked'),
+            bar_code        =   trimText(elements['bar_code'])
+            comission       =   to_int(elements['comission']),
+            description     =   trimText(elements['descripcion']),
+            tipo_ingreso    =   elements['tipo_ingreso'].val(),
+            owner_document  =   trimText(elements['cedula_vendedor']),
+            client_document =   trimText(elements['cedula_cliente'])
+
+
+        if(amount < 1) {
+            alert('La cantidad minima es 1')
+
+        } else if(tipo_ingreso == 'Producto' && !bar_code){
+
+            alert('Es necesario buscar un producto')
+            elements['bar_code'].focus()
+
+        }else if(tipo_ingreso === 'Servicio' && !price){
+
+            alert('Es necesario llenar el campo Precio')
+            elements['price'].focus()
+
+
+        }else if(tipo_ingreso === 'Servicio' && !name) {
+
+            alert('Es necesario llenar el campo Nombre')
+            elements['name'].focus()
+        
+        } else if(!comission) {
+
+            alert('Es necesario llenar el campo Procentaje Vendedor')
+            elements['comission'].focus()
+
+        } else {
+            $.post('/venta/', {
+                el_name: name,
+                is_card: is_card,
+                value: amount * price,
+                description: description,
+                owner_document: owner_document,
+                client_document: client_document,
+            }, function(data) {
+
+                if(data.ok) {
+                    alert('El ingreso se registro correctamente.')
+                    initialize(elements)
+                    
+                } else {
+                    alert(data.msg)
+                }
+
+            })
+            
+        }
         e.preventDefault()
     }) 
 
@@ -95,6 +152,10 @@ function to_int($element) {
     var value = $element.val()
     value = value == '' ? 0 : parseInt(value)
     return value
+}
+
+function trimText($element) {
+    return $.trim($element.val())
 }
 
 function saleProduct(elements, buttons) {
