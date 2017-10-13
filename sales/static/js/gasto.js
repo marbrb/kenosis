@@ -6,6 +6,10 @@ $(document).ready(function() {
         'cedula_vendedor':  $('#cedula_vendedor')
     }
 
+    buttons = {
+        'enviar': $('#enviar')
+    }
+
     forms = {
         'register':     $('#register'),
     }
@@ -13,6 +17,8 @@ $(document).ready(function() {
     initialize(elements)
 
     forms['register'].on('submit', function(e) {
+
+        buttons['enviar'].attr('disabled', true)
 
         var price           =   to_int(elements['price']),
             description     =   trimText(elements['descripcion']),
@@ -23,6 +29,8 @@ $(document).ready(function() {
             alert('Ingresa un precio válido')
             elements['price'].val('')
             elements['price'].focus()
+            buttons['enviar'].attr('disabled', false)
+
 
         } else {
             $.post('/gasto/', {
@@ -39,6 +47,7 @@ $(document).ready(function() {
                     alert(data.msg)
                 }
 
+                buttons['enviar'].attr('disabled', false)
             })
             
         }
