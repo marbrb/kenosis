@@ -18,6 +18,7 @@ $(document).ready(function() {
         'add_product':      $('#add_product'),
         'search_product':   $('#search_product'),
         'remove_product':   $('#remove_product'),
+        'enviar':           $('#enviar')
     }
 
     forms = {
@@ -30,6 +31,7 @@ $(document).ready(function() {
 
     elements['tipo_ingreso'].change(function() {
         $tipo = elements['tipo_ingreso']
+        initialize(elements)
 
         if($tipo.val() === 'Producto')
             saleProduct(elements, buttons)
@@ -37,7 +39,6 @@ $(document).ready(function() {
         else
             saleService(elements, buttons)
 
-        initialize(elements)
     })
 
     buttons['add_product'].on('click', function() {
@@ -85,6 +86,8 @@ $(document).ready(function() {
 
     forms['register'].on('submit', function(e) {
 
+        buttons['enviar'].attr('disabled', true)
+
         var name            =   trimText(elements['name']),
             price           =   to_int(elements['price']),
             amount          =   to_int(elements['amount']),
@@ -99,27 +102,32 @@ $(document).ready(function() {
 
         if(amount < 1) {
             alert('La cantidad minima es 1')
+            buttons['enviar'].attr('disabled', false)
 
         } else if(tipo_ingreso == 'Producto' && !bar_code){
 
             alert('Es necesario buscar un producto')
             elements['bar_code'].focus()
+            buttons['enviar'].attr('disabled', false)
+
 
         }else if(tipo_ingreso === 'Servicio' && !price){
 
             alert('Es necesario llenar el campo Precio')
             elements['price'].focus()
-
+            buttons['enviar'].attr('disabled', false)
 
         }else if(tipo_ingreso === 'Servicio' && !name) {
 
             alert('Es necesario llenar el campo Nombre')
             elements['name'].focus()
+            buttons['enviar'].attr('disabled', false)
         
         } else if(!comission) {
 
             alert('Es necesario llenar el campo Procentaje Vendedor')
             elements['comission'].focus()
+            buttons['enviar'].attr('disabled', false)
 
         } else {
             $.post('/venta/', {
@@ -129,6 +137,7 @@ $(document).ready(function() {
                 description: description,
                 owner_document: owner_document,
                 client_document: client_document,
+                percent: comission,
             }, function(data) {
 
                 if(data.ok) {
@@ -138,6 +147,8 @@ $(document).ready(function() {
                 } else {
                     alert(data.msg)
                 }
+
+                buttons['enviar'].attr('disabled', false)
 
             })
             
@@ -163,6 +174,7 @@ function saleProduct(elements, buttons) {
     elements['name'].attr('readonly', true)
     elements['name'].attr('placeholder', 'Nombre del producto')
     elements['bar_code'].attr('disabled', false)
+    elements['amount_holder'].val('')
     buttons['search_product'].attr('disabled', false)
 }
 
@@ -171,6 +183,7 @@ function saleService(elements, buttons) {
     elements['name'].attr('readonly', false)
     elements['name'].attr('placeholder', 'Nombre del servicio')
     elements['bar_code'].attr('disabled', true)
+    elements['amount_holder'].val('100')
     buttons['search_product'].attr('disabled', true)
 }
 
