@@ -58,21 +58,31 @@
             <div class="form-group">
                 <label for="bar-code">Descripción: </label>
                 <input type="text" class="form-control" id="descripcion"  placeholder="Descripción" required>
-            </div>             
-            <div class="form-group">
-                <label for="bar-code">Cédula Empleado: </label>
-                <div class="input-group">
-                    <span class="input-group-addon">C.C.</span>
-                    <input type="text" class="form-control" id="cedula_vendedor"  placeholder="Cédula del vendedor" required>
-                </div>  
             </div>
-            <div class="form-group">
-                <label for="bar-code">Cédula Cliente: </label>
-                <div class="input-group">
-                    <span class="input-group-addon">C.C.</span>
-                    <input type="text" class="form-control" id="cedula_cliente"  placeholder="Cédula del cliente">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="bar-code">Empleado: </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">Nombre: </span>
+                            <select class="form-control">
+                                {% for employee in employees %}
+                                <option >{{ employee.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>  
+                    </div>                    
                 </div>
-            </div> 
+                <div class="col">
+                    <div class="form-group">
+                        <label for="bar-code">Cliente: </label>
+                        <div class="input-group">
+                            <span class="input-group-addon">C.C.</span>
+                            <input type="text" class="form-control" id="cedula_cliente"  placeholder="Cédula del cliente">
+                        </div>
+                    </div>                     
+                </div>                
+            </div>         
             <div class="form-group">        
                 <div class="row">
                     <div class="col">
