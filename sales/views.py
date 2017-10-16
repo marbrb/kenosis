@@ -11,6 +11,13 @@ from .data import ENTRANCE_TYPE
 class CreateSale(TemplateView):
 	template_name = 'sales/create_sale.html'
 
+	def get_context_data(self, **kwargs):
+
+		context = super(CreateSale, self).get_context_data(**kwargs)
+		context['employees'] = Employee.objects.values('name')
+
+		return context
+
 	def post(self, *args, **kwargs):
 		data = self.request.POST
 
@@ -25,23 +32,46 @@ class CreateSale(TemplateView):
 		client_document = data.get('client_document')
 		client = None
 		if client_document:
-			client = Client.objects.get(document=owner_document)
+			try:
+				client = Client.objects.get(document=client_document)
+			except:
+				client = None
 
 		description = data.get('description')
-		value = data.get('value')
+		value = int(data.get('value'))
 
-		# TODO: validar si llega bien el dato
 		is_with_card = data.get('is_card')
+		is_with_card = True if is_with_card == 'true' else False
 
 
 		product_name = data.get('el_name')
 
 
-		Register.objects.Create(
+		percent = int(data.get('percent'))
+		admin_percent = 100 - percent
+
+		employee_value = (value * percent) / 100
+		admin_value = (value * admin_percent) / 100
+
+
+
+		Register.objects.create(
 			owner=owner,
 			client=client,
 			description=description,
-			value=value,
+			value=employee_value,
+			register_type=ENTRANCE_TYPE,
+			is_pay_with_card=is_with_card,
+			product_name=product_name,
+		)
+
+		admin = Employee.objects.get(document='kenosis')
+
+		Register.objects.create(
+			owner=admin,
+			client=client,
+			description=description,
+			value=admin_value,
 			register_type=ENTRANCE_TYPE,
 			is_pay_with_card=is_with_card,
 			product_name=product_name,
@@ -57,28 +87,31 @@ class CreateExpense(TemplateView):
 		data = self.request.POST
 
 		owner_document = data.get('owner_document')
-		owner = Employee.objects.filter(document=owner_document).first()
+		owner = Employee.objects.filter(document='kenosis').first()
 		if not owner:
 			return JsonResponse({
 				'ok': False,
-				'msg': 'No existe un empleado registado con esta cédula',
+				'msg': 'El ususario kenosis no está registrado',
 			})
 
+		# TODO: ennviar usuario kenosis a un setting
 		description = data.get('description')
 		value = data.get('value')
 
-		Register.objects.Create(
+		Register.objects.create(
 			owner=owner,
 			description=description,
 			value=value,
 			register_type=EXPENSE_TYPE,
 		)
 
+		return JsonResponse({'ok': True})
+
 
 class ProductDataJSONView(View):
 	def get(self, request, *args, **kwargs):
 		product_id = request.GET.get('code')
-		product = Product.objects.filter(id=product_id).first()
+		product = Product.objects.filter(code=product_id).first()
 		if not product:
 			return JsonResponse({
 				'ok': False,
@@ -86,7 +119,25 @@ class ProductDataJSONView(View):
 			})
 
 		return JsonResponse({
+			'ok': True,
 			'name': product.name,
 			'price': product.price,
 			'amount': product.amount,
 		})
+
+class TodayRegistersListView(View):
+	def get(self, request, *args, **kwargs):
+		yeison = {'data': []}
+
+		# TODO: filtrar
+		for reg in Register.objects.all():
+			info = {
+				'owner_name': reg.owner.name,
+				'value': reg.value,
+				'register_type': reg.get_register_type_display(),
+				'is_with_card': reg.is_pay_with_card,
+			}
+
+			yeison['data'].append(info)
+
+		return JsonResponse(yeison)
