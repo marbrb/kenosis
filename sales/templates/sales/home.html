@@ -18,24 +18,30 @@
 		<div class="card-group">
 			<div class="card bg-light mb-6 text-center" >
 				<div class="card-body">
-				<h4 class="card-title">Realizar Venta</h4>
-				<p class="card-text">Registrar la información relacionada con una venta.</p>
-				<a href="venta/" class="btn btn-success">Entrar</a>
+					<h4 class="card-title">Vender Producto</h4>
+					<a href="{% url 'sales:create_product_sale'%}" class="btn btn-success">Entrar</a>
+				</div>
 			</div>
+			<div class="card bg-light mb-6 text-center" >
+				<div class="card-body">
+					<h4 class="card-title">Vender Servicio</h4>
+					<a href="{% url 'sales:create_service_sale'%}" class="btn btn-success">Entrar</a>
+				</div>
 			</div>			
+		</div>
+		<div class="card-group">
 			<div class="card bg-light mb-6 text-center">
 				<div class="card-body">
 				<h4 class="card-title">Registar Gasto</h4>
-				<p class="card-text">Registar la información relacionada con un gasto.</p>
-				<a href="gasto/" class="btn btn-danger">Entrar</a>
+				<a href="{% url 'sales:create_expense'%}" class="btn btn-danger">Entrar</a>
 				</div>
 			</div>
-		</div>
-		<div class="card bg-light mb-6 text-center">
-			<div class="card-body">
-				<h4 class="card-title">Consultar Balance de Cuenta</h4>
-				<p class="card-text">Consulta la infromación sobre las ventas y los gastos del día.</p>
-				<a href="#" class="btn btn-dark">Entrar</a>
+			
+			<div class="card bg-light mb-6 text-center">
+				<div class="card-body">
+					<h4 class="card-title">Consultar Balance del día</h4>
+					<a href="{% url 'sales:balance'%}" class="btn btn-dark">Entrar</a>
+				</div>
 			</div>
 		</div>
 	</div>
