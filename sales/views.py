@@ -2,19 +2,19 @@ from django.http import JsonResponse
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.base import View
+from django.utils import timezone
 
 from .models import *
 from .data import EXPENSE_TYPE
 from .data import ENTRANCE_TYPE
 
 
-class CreateSale(TemplateView):
-	template_name = 'sales/create_sale.html'
+class ServiceSaleJSONView(TemplateView):
+	template_name = 'sales/create_service_sale.html'
 
 	def get_context_data(self, **kwargs):
-
-		context = super(CreateSale, self).get_context_data(**kwargs)
-		context['employees'] = Employee.objects.values('name')
+		context = super().get_context_data(**kwargs)
+		context['employees'] = Employee.objects.all()
 
 		return context
 
@@ -23,11 +23,6 @@ class CreateSale(TemplateView):
 
 		owner_document = data.get('owner_document')
 		owner = Employee.objects.filter(document=owner_document).first()
-		if not owner:
-			return JsonResponse({
-				'ok': False,
-				'msg': 'No existe un empleado registado con esta cédula',
-			})
 
 		client_document = data.get('client_document')
 		client = None
@@ -37,15 +32,10 @@ class CreateSale(TemplateView):
 			except:
 				client = None
 
-		description = data.get('description')
 		value = int(data.get('value'))
 
 		is_with_card = data.get('is_card')
 		is_with_card = True if is_with_card == 'true' else False
-
-
-		product_name = data.get('el_name')
-
 
 		percent = int(data.get('percent'))
 		admin_percent = 100 - percent
@@ -53,12 +43,11 @@ class CreateSale(TemplateView):
 		employee_value = (value * percent) / 100
 		admin_value = (value * admin_percent) / 100
 
-
+		product_name = data.get('el_name')
 
 		Register.objects.create(
 			owner=owner,
 			client=client,
-			description=description,
 			value=employee_value,
 			register_type=ENTRANCE_TYPE,
 			is_pay_with_card=is_with_card,
@@ -70,7 +59,6 @@ class CreateSale(TemplateView):
 		Register.objects.create(
 			owner=admin,
 			client=client,
-			description=description,
 			value=admin_value,
 			register_type=ENTRANCE_TYPE,
 			is_pay_with_card=is_with_card,
@@ -125,12 +113,104 @@ class ProductDataJSONView(View):
 			'amount': product.amount,
 		})
 
+
+class ProductSaleJSONView(TemplateView):
+	template_name = 'sales/create_product_sale.html'
+
+	def get_context_data(self, **kwargs):
+
+		context = super().get_context_data(**kwargs)
+		context['employees'] = Employee.objects.all()
+
+		return context
+
+	def post(self, *args, **kwargs):
+		data = self.request.POST
+
+		owner_document = data.get('owner_document')
+		owner = Employee.objects.filter(document=owner_document).first()
+
+		client_document = data.get('client_document')
+		client = None
+		if client_document:
+			try:
+				client = Client.objects.get(document=client_document)
+			except:
+				client = None
+
+		value = int(data.get('value'))
+
+		is_with_card = data.get('is_card')
+		is_with_card = True if is_with_card == 'true' else False
+
+
+		product_name = data.get('el_name')
+
+
+		percent = int(data.get('percent'))
+		admin_percent = 100 - percent
+
+		employee_value = (value * percent) / 100
+		admin_value = (value * admin_percent) / 100
+
+
+
+		Register.objects.create(
+			owner=owner,
+			client=client,
+			value=employee_value,
+			register_type=ENTRANCE_TYPE,
+			is_pay_with_card=is_with_card,
+			product_name=product_name,
+		)
+
+		admin = Employee.objects.get(document='kenosis')
+
+		Register.objects.create(
+			owner=admin,
+			client=client,
+			value=admin_value,
+			register_type=ENTRANCE_TYPE,
+			is_pay_with_card=is_with_card,
+			product_name=product_name,
+		)
+
+		product_code = data.get('product_code')
+		product = Product.objects.get(code=int(product_code))
+		product.amount -= 1
+		product.save()
+
+		return JsonResponse({'ok': True})
+
+
 class TodayRegistersListView(View):
 	def get(self, request, *args, **kwargs):
 		yeison = {'data': []}
 
+
+		today = timezone.now()
+
+		today_registers = Register.objects.filter(
+			date__date=today.date()
+		)
+
+		today_cash = 0
+		for register in today_registers.filter(
+			is_pay_with_card=False,
+			register_type=ENTRANCE_TYPE,
+		):
+			today_cash += register.value
+
+		card_cash = 0
+		for register in today_registers.filter(
+			is_pay_with_card=True,
+			register_type=ENTRANCE_TYPE,
+		):
+			card_cash += register.value
+
+
 		# TODO: filtrar
-		for reg in Register.objects.all():
+		for reg in today_registers:
 			info = {
 				'owner_name': reg.owner.name,
 				'value': reg.value,
@@ -139,5 +219,10 @@ class TodayRegistersListView(View):
 			}
 
 			yeison['data'].append(info)
+
+				
+				
+		yeison['today_cash'] = today_cash
+		yeison['card_cash'] = card_cash
 
 		return JsonResponse(yeison)

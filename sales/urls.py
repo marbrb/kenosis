@@ -1,16 +1,23 @@
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic.base import TemplateView
-from .views import CreateSale
+from .views import ProductSaleJSONView
+from .views import ServiceSaleJSONView
 from .views import CreateExpense
 from .views import ProductDataJSONView
 from .views import TodayRegistersListView
 
 urlpatterns = [
     url(
-    	r'venta/', 
-    	CreateSale.as_view(),
-    	name='create_sale'
+        r'venta/producto', 
+        ProductSaleJSONView.as_view(),
+        name='create_product_sale'
+    ),
+
+    url(
+    	r'venta/servicio', 
+    	ServiceSaleJSONView.as_view(),
+    	name='create_service_sale'
     ),
 
     url(
@@ -20,7 +27,7 @@ urlpatterns = [
     ),
 
     url(
-        r'inicio/', 
+        r'^$',
         TemplateView.as_view(template_name='sales/home.html'),
         name='home'
     ), 
@@ -40,7 +47,7 @@ urlpatterns = [
     url(
         r'balance/',
         TemplateView.as_view(template_name='sales/lista.html'),
-        name='home'        
+        name='balance'        
     ),
     
 ]
