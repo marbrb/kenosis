@@ -14,8 +14,16 @@
 
     <!-- Content -->
     <div class="container">
-
-        <h1>Venta de producto</h1>
+        <div class="row" style="margin-top: 20px">
+            <div class="col">
+                <h1>Venta de producto</h1>
+            </div>
+            <div class="col">
+                <div class="text-right">                        
+                    <a class="btn btn-primary pull-right" href="{% url 'sales:home'%}">Regresar</a>                 
+                </div>
+            </div>
+        </div>
         <form id="get_product">
 
             <div class="form-group">

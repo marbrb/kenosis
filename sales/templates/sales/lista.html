@@ -12,37 +12,44 @@
 </head>
 <body>
 	<div class="container">
-		<table class="table table-hover table-bordered">
-			<thead class="thead-inverse">
-				<tr>
-					<th class="text-center"></th>
-					<th class="text-center">Nombre</th>
-					<th class="text-center">Saldo</th>
-				</tr>
-			</thead>
+        <div class="row" style="margin-top: 20px">
+            <div class="col">
+            </div>
+            <div class="col">
+                <div class="text-right">                        
+                    <a class="btn btn-primary pull-right" href="{% url 'sales:home'%}">Regresar</a>                 
+                </div>
+            </div>
+        </div>
+		<h3>Ganancias</h3>		
+		<table class="table table-hover">
 			<tbody id="table">
 				<tr id="row_base" hidden="">
-					<th class="text-right"scope="row"></th>
-					<td class=""></td>
+					<td colspan="2"></td>
 					<td class="text-right"></td>
 				</tr>
 			</tbody>
 		</table>
 		<h3>Gastos</h3>
-		<table class="table table-hover table-bordered">
-			<thead class="thead-inverse">
-				<tr>
-					<th class="text-center"></th>
-					<th class="text-center">Nombre</th>
-					<th class="text-center">Saldo</th>
-				</tr>
-			</thead>
+		<table class="table table-hover">
 			<tbody id="table_expense">
 				<tr id="row_base" hidden="">
-					<th class="text-right"scope="row"></th>
-					<td class=""></td>
+					<td colspan="2"></td>
 					<td class="text-right"></td>
 				</tr>
+			</tbody>
+		</table>
+		<h3>Entradas Netas:</h3>
+		<table class="table table-hover">
+			<tbody id="table_expense">
+				<tr id="row_base">
+					<td colspan="2">Ingreso en efectivo:</td>
+					<td class="text-right" ><span id="cash"></span></td>
+				</tr>
+				<tr id="row_base">
+					<td colspan="2">Ingreso en trajeta de crédito:</td>
+					<td class="text-right"><span id="credit"></span></td>
+				</tr>				
 			</tbody>
 		</table>
 	</div>
