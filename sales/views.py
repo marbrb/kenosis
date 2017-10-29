@@ -21,6 +21,9 @@ class ServiceSaleJSONView(TemplateView):
 	def post(self, *args, **kwargs):
 		data = self.request.POST
 
+		is_with_card = data.get('is_card')
+		is_with_card = True if is_with_card == 'true' else False
+
 		owner_document = data.get('owner_document')
 		owner = Employee.objects.filter(document=owner_document).first()
 
@@ -32,86 +35,42 @@ class ServiceSaleJSONView(TemplateView):
 			except:
 				client = None
 
-		value = int(data.get('value'))
+		service_list = data.get('services')
+		service_list = eval(service_list)
 
-		is_with_card = data.get('is_card')
-		is_with_card = True if is_with_card == 'true' else False
+		for service in service_list:
+			product_name = service['el_name']
+			value = int(service['value'])
+						
+			percent = int(service['percent'])
+			admin_percent = 100 - percent
 
-		percent = int(data.get('percent'))
-		admin_percent = 100 - percent
+			employee_value = (value * percent) / 100
+			admin_value = (value * admin_percent) / 100
 
-		employee_value = (value * percent) / 100
-		admin_value = (value * admin_percent) / 100
+			Register.objects.create(
+				owner=owner,
+				client=client,
+				value=employee_value,
+				register_type=ENTRANCE_TYPE,
+				is_pay_with_card=is_with_card,
+				product_name=product_name,
+			)
 
-		product_name = data.get('el_name')
+			admin = Employee.objects.get(document='kenosis')
 
-		Register.objects.create(
-			owner=owner,
-			client=client,
-			value=employee_value,
-			register_type=ENTRANCE_TYPE,
-			is_pay_with_card=is_with_card,
-			product_name=product_name,
-		)
-
-		admin = Employee.objects.get(document='kenosis')
-
-		Register.objects.create(
-			owner=admin,
-			client=client,
-			value=admin_value,
-			register_type=ENTRANCE_TYPE,
-			is_pay_with_card=is_with_card,
-			product_name=product_name,
-		)
-
-		return JsonResponse({'ok': True})
-
-
-class CreateExpense(TemplateView):
-	template_name = 'sales/create_expense.html'
-
-	def post(self, *args, **kwargs):
-		data = self.request.POST
-
-		owner_document = data.get('owner_document')
-		owner = Employee.objects.filter(document='kenosis').first()
-		if not owner:
-			return JsonResponse({
-				'ok': False,
-				'msg': 'El ususario kenosis no está registrado',
-			})
-
-		# TODO: ennviar usuario kenosis a un setting
-		description = data.get('description')
-		value = data.get('value')
-
-		Register.objects.create(
-			owner=owner,
-			description=description,
-			value=value,
-			register_type=EXPENSE_TYPE,
-		)
+			Register.objects.create(
+				owner=admin,
+				client=client,
+				value=admin_value,
+				register_type=ENTRANCE_TYPE,
+				is_pay_with_card=is_with_card,
+				product_name=product_name,
+			)
 
 		return JsonResponse({'ok': True})
 
 
-class ProductDataJSONView(View):
-	def get(self, request, *args, **kwargs):
-		product_id = request.GET.get('code')
-		product = Product.objects.filter(code=product_id).first()
-		if not product:
-			return JsonResponse({
-				'ok': False,
-				'msg': 'Producto no encontrado',
-			})
-
-		return JsonResponse({
-			'ok': True,
-			'name': product.name,
-			'price': product.price,
-			'amount': product.amount,
-		})
 
 
 class ProductSaleJSONView(TemplateView):
@@ -181,6 +140,53 @@ class ProductSaleJSONView(TemplateView):
 		product.save()
 
 		return JsonResponse({'ok': True})
+
+
+
+class CreateExpense(TemplateView):
+	template_name = 'sales/create_expense.html'
+
+	def post(self, *args, **kwargs):
+		data = self.request.POST
+
+		owner_document = data.get('owner_document')
+		owner = Employee.objects.filter(document='kenosis').first()
+		if not owner:
+			return JsonResponse({
+				'ok': False,
+				'msg': 'El ususario kenosis no está registrado',
+			})
+
+		# TODO: ennviar usuario kenosis a un setting
+		description = data.get('description')
+		value = data.get('value')
+
+		Register.objects.create(
+			owner=owner,
+			description=description,
+			value=value,
+			register_type=EXPENSE_TYPE,
+		)
+
+		return JsonResponse({'ok': True})
+
+
+class ProductDataJSONView(View):
+	def get(self, request, *args, **kwargs):
+		product_id = request.GET.get('code')
+		product = Product.objects.filter(code=product_id).first()
+		if not product:
+			return JsonResponse({
+				'ok': False,
+				'msg': 'Producto no encontrado',
+			})
+
+		return JsonResponse({
+			'ok': True,
+			'name': product.name,
+			'price': product.price,
+			'amount': product.amount,
+		})
 
 
 class TodayRegistersListView(View):

@@ -71,7 +71,12 @@ $(document).ready(function() {
             elements['comission'].val()
             buttons['enviar'].attr('disabled', false)
 
-        }else {
+        }else if(comission > 100) {
+            alert('El porcentaje del vendedor tiene que ser menor a 100.')
+            elements['comission'].val('')
+            elements['comission'].focus()            
+            buttons['enviar'].attr('disabled', false)
+        } else {
             $.post('/venta/producto/', {
                 el_name: name,
                 is_card: is_card,

@@ -2,6 +2,11 @@ from django.contrib import admin
 
 from .models import *
 
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+
+admin.site.unregister(Group)
+admin.site.unregister(User)
 admin.site.site_header = 'Administración de Kenosis'
 
 
@@ -32,8 +37,9 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Register)
 class RegisterAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
-        return True
+        return False
 
     search_fields = ('id',)
     list_filter = ('date', 'register_type')
     list_display = ('id', 'date', 'register_type', 'value', 'description',)
+    readonly_fields = ('client', 'description', 'register_type', 'product_name')

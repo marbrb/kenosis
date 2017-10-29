@@ -88,7 +88,9 @@ class Employee(models.Model):
 
     phone_number = models.CharField(
         max_length=10,
-        verbose_name='celular'
+        verbose_name='celular',
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
@@ -120,7 +122,7 @@ class Register(models.Model):
     )
 
     date = models.DateTimeField(
-        auto_now=True,
+        auto_now_add=True,
         verbose_name='fecha',
     )
 

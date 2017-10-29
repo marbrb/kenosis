@@ -5,6 +5,8 @@ $(document).ready(function() {
     var elements = {
         'row'           : $('#row_base'),
         'table'         : $('#table'),
+        'credit'        : $('#credit'),
+        'cash'          : $('#cash'),
         'table_expense' : $('#table_expense')
     }
 
@@ -12,8 +14,16 @@ $(document).ready(function() {
         'print' : $('#print')
     }
 
+    buttons['print'].click(function(e) {
+        window.print()
+    })
+
     $.get('/registros', function(data) {
+        console.log(data)
         var registros = data.data
+
+        elements['cash'].text(data.today_cash)
+        elements['credit'].text(data.card_cash)
 
         var ingresos = {}
         var gastos = {}
@@ -64,9 +74,9 @@ function addRow(base, table, idx, register) {
 
     new_row.attr('hidden', false) 
 
-    children[0].textContent = idx
-    children[1].textContent = register.key
-    children[2].textContent = register.val
+    // children[0].textContent = idx
+    children[0].textContent = register.key
+    children[1].textContent = register.val
 
     table.append(new_row)
 

@@ -21,7 +21,7 @@ $(document).ready(function() {
 
     forms['register'].on('submit', function(e) {
 
-        buttons['enviar'].attr('disabled', true)
+        // buttons['enviar'].attr('disabled', true)
 
         var price           =   to_int(elements['price']),
             is_card         =   elements['pay_with_card'].prop('checked'),
@@ -50,21 +50,28 @@ $(document).ready(function() {
             elements['comission'].focus()            
             buttons['enviar'].attr('disabled', false)
 
+        } else if(comission > 100) {
+            alert('El porcentaje del vendedor tiene que ser menor a 100.')
+            elements['comission'].val('')
+            elements['comission'].focus()            
+            buttons['enviar'].attr('disabled', false)
         }else {
 
             $.post('venta/servicio', {
-                el_name: description,
                 is_card: is_card,
-                value:  price,
                 owner_document: owner_document,
                 client_document: client_document,
-                percent: comission,
+                services: JSON.stringify([{
+                    el_name: description,
+                    value:  price,  
+                    percent: comission,
+                }])
             }, function(data) {
 
                 if(data.ok) {
                     alert('El ingreso se registro correctamente.')
-                    initialize(elements)
-                    
+                    elements['descripcion'].val('')
+                    elements['price'].val('')
                 } else {
                     alert(data.msg)
                 }
