@@ -32,6 +32,8 @@ $(document).ready(function() {
                 if(!data.ok){
                     alert(data.msg)
                     elements['bar_code'].val('')
+                    elements['name'].val('')
+                    elements['price'].val('')
                     elements['bar_code'].focus()
 
                 } else {
@@ -90,6 +92,7 @@ $(document).ready(function() {
                 if(data.ok) {
                     alert('El ingreso se registro correctamente.')
                     initialize(elements)
+                    window.print()
                     
                 } else {
                     alert(data.msg)
@@ -124,5 +127,4 @@ function initialize(elements) {
     elements['cedula_cliente'].val('')
 
     elements['pay_with_card'].prop('checked', false)
-
 }

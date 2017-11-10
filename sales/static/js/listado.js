@@ -22,7 +22,6 @@ $(document).ready(function() {
         console.log(data)
         var registros = data.data
 
-        elements['cash'].text(data.today_cash)
         elements['credit'].text(data.card_cash)
 
         var ingresos = {}
@@ -63,6 +62,9 @@ $(document).ready(function() {
                 val: gastos[i]
             })
         }
+
+        elements['cash'].text(data.today_cash - gastos['kenosis'])
+
 
     })
 })

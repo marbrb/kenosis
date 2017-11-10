@@ -174,6 +174,12 @@ class CreateExpense(TemplateView):
 class ProductDataJSONView(View):
 	def get(self, request, *args, **kwargs):
 		product_id = request.GET.get('code')
+		if not str(product_id).isdigit():
+			return JsonResponse({
+				'ok': False,
+				'msg': 'Producto no encontrado',
+			})
+
 		product = Product.objects.filter(code=product_id).first()
 		if not product:
 			return JsonResponse({
@@ -194,7 +200,7 @@ class TodayRegistersListView(View):
 		yeison = {'data': []}
 
 
-		today = timezone.now()
+		today = timezone.localtime(timezone.now())
 
 		today_registers = Register.objects.filter(
 			date__date=today.date()
