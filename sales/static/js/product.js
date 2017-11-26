@@ -91,6 +91,11 @@ $(document).ready(function() {
 
                 if(data.ok) {
                     alert('El ingreso se registro correctamente.')
+                    //popuate sub table
+                    $('#print-cod').text(bar_code)
+                    // console.log(bar_code)
+                    $('#print-nam').text(name)
+                    $('#print-pri').text(price)
                     initialize(elements)
                     window.print()
                     

@@ -19,7 +19,6 @@ $(document).ready(function() {
     })
 
     $.get('/registros', function(data) {
-        console.log(data)
         var registros = data.data
 
         elements['credit'].text(data.card_cash)
@@ -63,7 +62,11 @@ $(document).ready(function() {
             })
         }
 
-        elements['cash'].text(data.today_cash - gastos['kenosis'])
+        var g = gastos['kenosis']
+        if (g === undefined) {
+            g = 0 
+        }
+        elements['cash'].text(data.today_cash - g)
 
 
     })
