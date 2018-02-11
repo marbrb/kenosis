@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-grid.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery-confirm.min.css">
 </head>
 <body>
 	<div class="container">
@@ -27,7 +28,7 @@
 					<h4 class="card-title">Vender Servicio</h4>
 					<a href="{% url 'sales:create_service_sale'%}" class="btn btn-success">Entrar</a>
 				</div>
-			</div>			
+			</div>
 		</div>
 		<div class="card-group">
 			<div class="card bg-light mb-6 text-center">
@@ -36,7 +37,7 @@
 				<a href="{% url 'sales:create_expense'%}" class="btn btn-danger">Entrar</a>
 				</div>
 			</div>
-			
+
 			<div class="card bg-light mb-6 text-center">
 				<div class="card-body">
 					<h4 class="card-title">Consultar Balance del día</h4>
@@ -44,6 +45,24 @@
 				</div>
 			</div>
 		</div>
+    <div class="card-group">
+			<div class="card bg-light mb-6 text-center">
+				<div class="card-body">
+  				<h4 class="card-title">Eliminar último ingreso</h4>
+  				<button type="button" class="btn btn-warning js-reverse-sale" data-url="{% url 'sales:reverse_sale'%}">Eliminar</button>
+				</div>
+			</div>
+
+			<div class="card bg-light mb-6 text-center">
+				<div class="card-body">
+					<h4 class="card-title">Eliminar último gasto</h4>
+					<button type="button" class="btn btn-warning js-reverse-expense" data-url="{% url 'sales:reverse_expense'%}">Eliminar</button>
+				</div>
+			</div>
+		</div>
 	</div>
+  <script src="/static/js/jquery-3.2.1.min.js"></script>
+  <script src="/static/js/jquery-confirm.min.js"></script>
+  <script src="/static/js/home.js"></script>
 </body>
 </html>

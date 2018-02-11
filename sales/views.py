@@ -3,6 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.base import View
 from django.utils import timezone
+from django.shortcuts import redirect
 
 from .models import *
 from .data import EXPENSE_TYPE
@@ -41,7 +42,7 @@ class ServiceSaleJSONView(TemplateView):
 		for service in service_list:
 			product_name = service['el_name']
 			value = int(service['value'])
-						
+
 			percent = int(service['percent'])
 			admin_percent = 100 - percent
 
@@ -135,7 +136,13 @@ class ProductSaleJSONView(TemplateView):
 		)
 
 		product_code = data.get('product_code')
-		product = Product.objects.get(code=int(product_code))
+
+		if str(product_code).isdigit():
+			product_code = int(product_code)
+		else:
+			product_code = str(product_code).strip()
+
+		product = Product.objects.get(code=product_code)
 		product.amount -= 1
 		product.save()
 
@@ -145,6 +152,14 @@ class ProductSaleJSONView(TemplateView):
 
 class CreateExpense(TemplateView):
 	template_name = 'sales/create_expense.html'
+
+	def get(self, *args, **kwargs):
+		max_date = timezone.now() - timezone.timedelta(days=30)
+		Register.objects.filter(
+			date__date__lt=max_date.date()
+		).delete()
+
+		return super().get(*args, **kwargs)
 
 	def post(self, *args, **kwargs):
 		data = self.request.POST
@@ -175,10 +190,8 @@ class ProductDataJSONView(View):
 	def get(self, request, *args, **kwargs):
 		product_id = request.GET.get('code')
 		if not str(product_id).isdigit():
-			return JsonResponse({
-				'ok': False,
-				'msg': 'Producto no encontrado',
-			})
+			product_id = product_id.strip()
+
 
 		product = Product.objects.filter(code=product_id).first()
 		if not product:
@@ -195,34 +208,35 @@ class ProductDataJSONView(View):
 		})
 
 
-class TodayRegistersListView(View):
+class RegistersListView(View):
 	def get(self, request, *args, **kwargs):
+		date = timezone.localtime(timezone.now()).date()
+
+		desired_date = kwargs.get('date')
+		if desired_date:
+			date = timezone.datetime.strptime(desired_date, "%d-%m-%Y").date()
+
 		yeison = {'data': []}
 
-
-		today = timezone.localtime(timezone.now())
-
-		today_registers = Register.objects.filter(
-			date__date=today.date()
+		registers = Register.objects.filter(
+			date__date=date
 		)
 
-		today_cash = 0
-		for register in today_registers.filter(
+		cash = 0
+		for register in registers.filter(
 			is_pay_with_card=False,
 			register_type=ENTRANCE_TYPE,
 		):
-			today_cash += register.value
+			cash += register.value
 
 		card_cash = 0
-		for register in today_registers.filter(
+		for register in registers.filter(
 			is_pay_with_card=True,
 			register_type=ENTRANCE_TYPE,
 		):
 			card_cash += register.value
 
-
-		# TODO: filtrar
-		for reg in today_registers:
+		for reg in registers:
 			info = {
 				'owner_name': reg.owner.name,
 				'value': reg.value,
@@ -232,9 +246,67 @@ class TodayRegistersListView(View):
 
 			yeison['data'].append(info)
 
-				
-				
-		yeison['today_cash'] = today_cash
+
+
+		yeison['today_cash'] = cash
 		yeison['card_cash'] = card_cash
 
 		return JsonResponse(yeison)
+
+
+class ReverseSaleJSONView(View):
+	def get(self, request, *args, **kwargs):
+
+		last_sale = Register.objects.filter(
+			register_type=ENTRANCE_TYPE,
+		).last()
+
+		if not last_sale:
+			return JsonResponse({
+				'title': 'Eliminar Venta',
+				'msg': 'No existen registros para eliminar',
+				'type': 'red'
+			})
+
+		last_sale2 = Register.objects.get(
+			id=last_sale.id - 1,
+		).delete()
+
+		last_sale.delete()
+
+		return JsonResponse({
+			'title': 'Eliminar Venta',
+			'msg': 'La última venta fue eliminada',
+			'type': 'green',
+		})
+
+class ReverseExpenseJSONView(View):
+	def get(self, request, *args, **kwargs):
+
+		last_expense = Register.objects.filter(
+			register_type=EXPENSE_TYPE,
+		).last()
+
+		if not last_expense:
+			return JsonResponse({
+				'title': 'Eliminar Gasto',
+				'msg': 'No existen registros para eliminar',
+				'type': 'red',
+			})
+
+		last_expense.delete()
+
+		return JsonResponse({
+			'title': 'Eliminar Gasto',
+			'msg': 'El último gasto fue eliminado',
+			'type': 'green'
+		})
+
+class RegisterTemplateView(TemplateView):
+	template_name = 'sales/lista.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['date'] = kwargs.get('date')
+
+		return context

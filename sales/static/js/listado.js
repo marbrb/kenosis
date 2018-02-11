@@ -18,7 +18,28 @@ $(document).ready(function() {
         window.print()
     })
 
-    $.get('/registros', function(data) {
+    $.datetimepicker.setLocale('es');
+
+    var d = $('.datepicker').datetimepicker({
+      format: 'd-m-Y',
+      lang: 'es',
+      timepicker:false,
+      maxDate: 0,
+      yearEnd: new Date().getFullYear()
+    });
+
+    $('.js-change-date').on('click', function() {
+      var date = $('.js-date').val()
+      if (!date){
+        alert('Selecciona una fecha')
+        return
+      }
+      window.location.replace(window.location.origin + '/balance/' + date);
+    });
+
+    var extra_path = location.pathname.split('balance')
+    extra_path = extra_path[extra_path.length - 1]
+    $.get('/registros' + extra_path, function(data) {
         var registros = data.data
 
         elements['credit'].text(data.card_cash)
@@ -30,7 +51,7 @@ $(document).ready(function() {
             var name = registros[i]['owner_name']
 
             if(registros[i].register_type === 'ingreso') {
-                
+
                 if(!ingresos[name])
                     ingresos[name] = 0
 
@@ -49,9 +70,9 @@ $(document).ready(function() {
         var idx = 1
         for(var i in ingresos){
             addRow(elements['row'], elements['table'], idx++, {
-                key: i, 
+                key: i,
                 val: ingresos[i]
-            })            
+            })
         }
 
         idx = 1
@@ -64,7 +85,7 @@ $(document).ready(function() {
 
         var g = gastos['kenosis']
         if (g === undefined) {
-            g = 0 
+            g = 0
         }
         elements['cash'].text(data.today_cash - g)
 
@@ -77,7 +98,7 @@ function addRow(base, table, idx, register) {
     var new_row = base.clone()
     var children = new_row.children()
 
-    new_row.attr('hidden', false) 
+    new_row.attr('hidden', false)
 
     // children[0].textContent = idx
     children[0].textContent = register.key

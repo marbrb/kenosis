@@ -8,20 +8,25 @@
     <link rel="stylesheet" type="text/css" href="/static/css/icons.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 </head>
 <body>
 	<div class="container">
-        <div class="row" style="margin-top: 20px">
+        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
             <div class="col">
+                <div class="text-left" id="date-fields">
+                    <input type="text" data-provide="datepicker" class="datepicker js-date" style="height: 35px; width: 125px; text-align: center;" placeholder="dd/mm/aaaa">
+                    <button type="button" class="btn btn-danger pull-left js-change-date">Cambiar fecha</button>
+                </div>
             </div>
             <div class="col">
-                <div class="text-right">                        
-                    <a id="back" class="btn btn-primary pull-right" href="{% url 'sales:home'%}">Regresar</a>                 
+                <div class="text-right">
+                    <a id="back" class="btn btn-primary pull-right" href="{% url 'sales:home'%}">Regresar</a>
                 </div>
             </div>
         </div>
-		<h3>Ganancias</h3>		
+		<h3>Ganancias {% if date %} del {{ date }}{% else %} de hoy{% endif %}</h3>
 		<table class="table table-hover">
 			<tbody id="table">
 				<tr id="row_base" hidden="">
@@ -43,17 +48,17 @@
 		<table class="table table-hover">
 			<tbody id="table_expense">
 				<tr id="row_base">
-					<td colspan="2">Ingreso en efectivo:</td>
+					<td colspan="2">Efectivo en caja:</td>
 					<td class="text-right" ><span id="cash"></span></td>
 				</tr>
 				<tr id="row_base">
 					<td colspan="2">Ingreso en trajeta de crédito:</td>
 					<td class="text-right"><span id="credit"></span></td>
-				</tr>				
+				</tr>
 			</tbody>
 		</table>
-        <div class="text-right">                        
-            <button id="print" class="btn btn-primary pull-right">Imprimir</button>                 
+        <div class="text-right">
+            <button id="print" class="btn btn-primary pull-right">Imprimir</button>
         </div>
 		<br>
 		<hr>
@@ -61,6 +66,7 @@
     <script src="/static/js/jquery-3.2.1.min.js"></script>
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/boostrap.min.js"></script>
+    <script src="/static/js/jquery.datetimepicker.js"></script>
     <script src="/static/js/index.js"></script>
     <script src="/static/js/listado.js"></script>
 </body>

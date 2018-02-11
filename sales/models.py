@@ -5,6 +5,22 @@ from .data import ENTRANCE_TYPE
 from .data import EXPENSE_TYPE
 
 
+class EstheticHouse(models.Model):
+    name = models.CharField(
+        verbose_name='nombre',
+        max_length=512,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name',]
+        verbose_name = 'Casa Estética'
+        verbose_name_plural = 'Casas Estéticas'
+
+
 class Client(models.Model):
     name = models.CharField(
         max_length=255,
@@ -43,9 +59,17 @@ class Client(models.Model):
 
 
 class Product(models.Model):
-    code = models.IntegerField(
+    code = models.CharField(
         primary_key=True,
         verbose_name='código',
+        max_length=255,
+        unique=True,
+    )
+
+    house = models.ForeignKey(
+        'EstheticHouse',
+        verbose_name='casa estética',
+        null=True,
     )
 
     name = models.CharField(

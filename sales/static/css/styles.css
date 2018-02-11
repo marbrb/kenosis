@@ -18,16 +18,17 @@
 	}
 	td {
 		padding-top: 0 !important;
-		margin-top: 0;		
+		margin-top: 0;
 		padding-bottom: 0 !important;
 		margin-bottom: 0;
 	}
 	#recieve {
 		display: block;
 	}
-	#back, #print {
+	#back, #print, #date-fields{
 		display: none;
 	}
+
 	.containter {
 		margin: 0;
 		padding: 0;
