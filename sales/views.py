@@ -169,7 +169,7 @@ class CreateExpense(TemplateView):
 		if not owner:
 			return JsonResponse({
 				'ok': False,
-				'msg': 'El ususario kenosis no está registrado',
+				'msg': 'El empleado kenosis no está registrado',
 			})
 
 		# TODO: ennviar usuario kenosis a un setting
